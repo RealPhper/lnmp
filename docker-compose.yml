@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  web: 
+    build: ./php-dev
+    volumes:
+      - ./web:/app/public
+      - ./php-dev/extension:/app/extension
+    networks: 
+      - my-bridge
+      
+  nginx:
+    image: 'bitnami/nginx:1.14'
+    ports:
+      - '80:8080'
+      - '443:8443'
+    volumes:
+      - ./nginx/vhosts:/opt/bitnami/nginx/conf/vhosts
+      - ./nginx/certs:/bitnami/nginx/conf/bitnami/certs
+      - ./web:/app/public
+    networks: 
+      - my-bridge
+
+  mysql:
+    image: 'bitnami/mysql:5.7'
+    tty: true
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=programmer
+      - MYSQL_PASSWORD=root
+    volumes:
+      - ./mysql/data/mysql-persistence:/bitnami/mysql/data
+      - ./data/conf/my.cnf:/opt/bitnami/mysql/conf/my.cnf
+    networks: 
+      - my-bridge
+
+  # redis:
+  #   image: 'registry.docker-cn.com/bitnami/redis:latest'
+  #   environment:
+  #     - ALLOW_EMPTY_PASSWORD=yes
+  #   ports:
+  #     - '6000:6379'
+  #   volumes:
+  #     - ./data/redis-persistence:/bitnami/redis/data
+  #   networks: 
+  #     - my-bridge
+
+networks: 
+  my-bridge:
+    driver: bridge
