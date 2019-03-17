@@ -32,7 +32,7 @@ services:
       - MYSQL_PASSWORD=root
     volumes:
       - ./mysql/data/mysql-persistence:/bitnami/mysql/data
-      - ./data/conf/my.cnf:/opt/bitnami/mysql/conf/my.cnf
+      - ./mysql/conf/my.cnf:/opt/bitnami/mysql/conf/my.cnf
     networks: 
       - my-bridge
 
