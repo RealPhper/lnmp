@@ -4,7 +4,7 @@ services:
   web: 
     build: ./php-dev
     volumes:
-      - ./web:/app/public
+      - /home/vagrant/code/robot_system:/app/public
       - ./php-dev/extension:/app/extension
     networks: 
       - my-bridge
@@ -17,7 +17,7 @@ services:
     volumes:
       - ./nginx/vhosts:/opt/bitnami/nginx/conf/vhosts
       - ./nginx/certs:/bitnami/nginx/conf/bitnami/certs
-      - ./web:/app/public
+      - /home/vagrant/code/robot_system:/app/public
     networks: 
       - my-bridge
 
@@ -35,7 +35,16 @@ services:
       - ./mysql/conf/my.cnf:/opt/bitnami/mysql/conf/my.cnf
     networks: 
       - my-bridge
-
+  mongodb:
+    image: 'bitnami/mongodb:latest'
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGODB_ROOT_PASSWORD=password123
+    volumes:
+      - ./mongodb/data/mongodb-persistence:/bitnami
+    networks:
+      - my-bridge
   # redis:
   #   image: 'registry.docker-cn.com/bitnami/redis:latest'
   #   environment:
